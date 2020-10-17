@@ -1,6 +1,7 @@
 function [] = circ_pot()
     grid = 50;
     % define a line of points with x spacing 7 along y = x+1
+    % redefine this to test different lidar data!
     Z = zeros(grid*2+1,grid*2+1);
     x_pts = -20:7:20;
     y_pts = x_pts+1;
@@ -14,6 +15,8 @@ function [] = circ_pot()
     % plotting
     [x,y] = meshgrid(-grid:grid, -grid:grid);
     surf(x,y,Z);
+    % comment this line 
+    axis square;
     % uncomment to force top down view
     %view(2);
 end
@@ -52,7 +55,8 @@ function [Z] = blit_pot(Z, z_size, center, r_center, r_max)
                    % ceil function chosen to prevent div/0 error and to
                    % prevent the potential from being ever larger than 1
                    % we start at 1/2 so we can use 1 for the max pot
-                   pot = 1/ceil(sqrt(dist_2)-r_center+1);
+                   % +1 here so we clamp off the the potential at zero to 1
+                   pot = 1/ceil(dist_2-r_center^2+1);
                    Z(y, x) = pot + Z(y, x);
                    % clamp value to max potential val
                    if(Z(y, x) > MAX_POT)
